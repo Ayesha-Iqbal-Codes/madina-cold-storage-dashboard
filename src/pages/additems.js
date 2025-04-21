@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import PopupModal from '../components/popmodel'; // Adjust the path as needed
+import PopupModal from '../components/popmodel'; 
 import logo from '../assets/Logo.webp';
 
 
 
-// Utility function to get current date in dd/mm/yyyy format
 const getCurrentDate = () => {
   const date = new Date();
   const day = String(date.getDate()).padStart(2, '0');
@@ -22,7 +21,7 @@ const AddItems = () => {
     companyName: '',
     itemName: '',
     quantity: '',
-    packaging: '', // Changed from identity to packaging
+    packaging: '', 
     vehicleNo: '',
     roomNo: '',
     floorNo: '',
@@ -30,7 +29,7 @@ const AddItems = () => {
     workerName: '',
     receiverName: '',
     extraDescription: '',
-    otherPackaging: '', // Changed from otherIdentity to otherPackaging
+    otherPackaging: '', 
   });
 
   const [items, setItems] = useState([]);
@@ -48,7 +47,7 @@ const AddItems = () => {
   };
 
   const resetSerialNumberCounter = () => {
-    localStorage.setItem('lastSerialNo', '0'); // Reset the counter to 0
+    localStorage.setItem('lastSerialNo', '0'); 
   };
   
   const getLastSerialNo = () => {
@@ -75,7 +74,7 @@ const AddItems = () => {
   const getHighestSerialNo = () => {
     const savedItems = JSON.parse(localStorage.getItem('items')) || [];
     
-    // Extract serial numbers and find the highest one
+  
     const serialNumbers = savedItems.map(item => parseInt(item.serialNo.match(/\d+/)[0]));
     const highestSerial = serialNumbers.length > 0 ? Math.max(...serialNumbers) : 0;
     
@@ -84,18 +83,18 @@ const AddItems = () => {
   
   const getNextSerialNo = () => {
     const highestSerialNo = getHighestSerialNo();
-    const nextSerialNo = (highestSerialNo + 1).toString().padStart(5, '0'); // Pad to ensure 5 digits
+    const nextSerialNo = (highestSerialNo + 1).toString().padStart(5, '0'); 
     return nextSerialNo;
   };
   
-  // Function to be used on item creation
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Retrieve and update the serial number
+    
     const newSerialNo = getNextSerialNo();
     
-    // Convert packaging value to its display name
+    
     const packagingDisplay = getPackagingLabel(formData.packaging, formData.otherPackaging);
     const newItem = { ...formData, serialNo: editingSerialNo || newSerialNo, packaging: packagingDisplay };
     
@@ -106,7 +105,7 @@ const AddItems = () => {
     setItems(updatedItems);
     localStorage.setItem('items', JSON.stringify(updatedItems));
     
-    // Reset form and editing state
+    
     setFormData({
       serialNo: '',
       date: getCurrentDate(),
@@ -126,19 +125,17 @@ const AddItems = () => {
     setEditingSerialNo(null);
   };
   
-  // Remove the resetSerialNumberCounter function if not needed
-  
-  
+
 
  const handleDelete = (serialNo) => {
-  // Filter out the item with the specified serialNo
+
   const updatedItems = items.filter(item => item.serialNo !== serialNo);
   
-  // Update the state and local storage
+  
   setItems(updatedItems);
   localStorage.setItem('items', JSON.stringify(updatedItems));
 
-  // If there are no more items, reset the serial number counter
+
   if (updatedItems.length === 0) {
     resetSerialNumberCounter();
   }
@@ -168,14 +165,13 @@ const AddItems = () => {
     const companyName = 'Madina Cold Storage';
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const logoWidth = 20; // Width of the logo
-    const logoMarginLeft = 14; // Margin from the left edge
-    const lineHeight = 10; // Consistent line height for text
-    const headerMarginTop = 10; // Margin from the top for the header
-    const sectionMarginTop = 20; // Margin above each section
-    const lineY = pageHeight / 2; // Original Y position for the dividing line
-    let currentY = headerMarginTop; // Initial Y position for the text
-  
+    const logoWidth = 20; 
+    const logoMarginLeft = 14; 
+    const lineHeight = 10; 
+    const headerMarginTop = 10; 
+    const sectionMarginTop = 20; 
+    const lineY = pageHeight / 2; 
+    let currentY = headerMarginTop; 
     const packagingLabels = {
       packaging1: 'Box Crate',
       packaging2: 'Cardboard',
@@ -183,45 +179,45 @@ const AddItems = () => {
     };
   
     const addHeader = () => {
-      // Add logo
+    
       doc.setFontSize(20);
-      doc.addImage(logo, 'WEBP', logoMarginLeft, currentY, logoWidth, logoWidth, '', 'FAST'); // Logo on the left
+      doc.addImage(logo, 'WEBP', logoMarginLeft, currentY, logoWidth, logoWidth, '', 'FAST'); 
   
-      // Calculate text width and position for company name
+      
       const textWidth = doc.getTextWidth(companyName);
-      const totalWidth = logoWidth + 50 + textWidth; // 50 is the margin between logo and text
+      const totalWidth = logoWidth + 50 + textWidth; 
       const textX = (pageWidth - totalWidth) / 2 + logoWidth + 20;
       doc.text(companyName, textX, currentY + 15);
   
-      // Add a horizontal line below the company name
+      
       doc.setLineWidth(0.5);
       doc.line(10, currentY + 25, pageWidth - 10, currentY + 25);
   
-      // Add space below the header
-      currentY += 20; // Space for the header and line
+     
+      currentY += 20; 
     };
   
     const addSection = (title) => {
-      // Add section title
+     
       doc.setFontSize(18);
-      doc.text(title, pageWidth / 2, currentY + sectionMarginTop, { align: 'center' }); // Adjusted Y position
-      currentY += lineHeight + sectionMarginTop; // Adjust position for the section title
+      doc.text(title, pageWidth / 2, currentY + sectionMarginTop, { align: 'center' }); 
+      currentY += lineHeight + sectionMarginTop; 
   
-      // Add item details in a table format
+      
       doc.setFontSize(14);
       const leftColumnX = 20;
       const rightColumnX = pageWidth / 2 + 10;
   
-      // Left Column
+    
       doc.text(`Serial No: ${formData.serialNo}`, leftColumnX, currentY);
       doc.text(`Date: ${formData.date}`, leftColumnX, currentY + lineHeight);
       doc.text(`Company’s Name: ${formData.companyName}`, leftColumnX, currentY + lineHeight * 2);
       doc.text(`Item Name: ${formData.itemName}`, leftColumnX, currentY + lineHeight * 3);
       doc.text(`Quantity: ${formData.quantity}`, leftColumnX, currentY + lineHeight * 4);
   
-      // Determine the packaging text
+      
       let packagingText;
-      if (formData.packaging === 'packaging3') { // If "Other" is selected
+      if (formData.packaging === 'packaging3') { 
         packagingText = formData.otherPackaging.trim() || 'Not Specified';
       } else {
         packagingText = packagingLabels[formData.packaging] || 'Unknown';
@@ -229,7 +225,7 @@ const AddItems = () => {
   
       doc.text(`Packaging: ${packagingText}`, leftColumnX, currentY + lineHeight * 5);
   
-      // Right Column
+      
     doc.text(`Vehicle No: ${formData.vehicleNo}`, rightColumnX, currentY);
     doc.text(`Rack No: ${formData.rackNo}`, rightColumnX, currentY + lineHeight *3 );
     doc.text(`Room No: ${formData.roomNo}`, rightColumnX, currentY + lineHeight);
@@ -237,39 +233,39 @@ const AddItems = () => {
     doc.text(`Worker’s Name: ${formData.workerName}`, rightColumnX, currentY + lineHeight * 4);
     doc.text(`Receiver Name: ${formData.receiverName}`, rightColumnX, currentY + lineHeight * 5);
   
-      // Extra Description (spanning across both columns)
-      currentY += lineHeight * 6; // Move below the columns
+     
+      currentY += lineHeight * 6; 
       doc.text('Extra Description:', leftColumnX, currentY);
       doc.setFontSize(15);
       const descriptionLines = doc.splitTextToSize(formData.extraDescription, pageWidth - 2 * leftColumnX - 20);
       doc.text(descriptionLines, leftColumnX, currentY + lineHeight);
   
-      currentY += lineHeight * (descriptionLines.length + 2); // Move below the extra description
+      currentY += lineHeight * (descriptionLines.length + 2); 
     };
   
-    // Add first section
+   
     addHeader();
     addSection('Office Use');
   
-    // Draw the dotted dividing line
+    
     doc.setLineWidth(1);
-    doc.setDrawColor(0, 0, 0); // Black color
-    doc.setLineDash([1, 2]); // Dotted line
+    doc.setDrawColor(0, 0, 0); 
+    doc.setLineDash([1, 2]); 
     doc.line(10, lineY, pageWidth - 10, lineY);
-    doc.setLineDash([]); // Reset line dash
+    doc.setLineDash([]); 
   
-    // Adjust current Y position to start after the dotted line for the second section
-    currentY = lineY - 30 + 30; // Move up by 30 units from the dotted line
-    addHeader(); // Call addHeader again to add the logo and company name in the second section
+    
+    currentY = lineY - 30 + 30; 
+    addHeader(); 
     addSection('Customer Receipt');
   
-    // Add a footer
-    const footerMarginBottom = 10; // Adjust as needed
-    currentY = pageHeight - footerMarginBottom; // Move to near the bottom of the page
+  
+    const footerMarginBottom = 10; 
+    currentY = pageHeight - footerMarginBottom; 
     doc.setFontSize(10);
     doc.text('Thank you for your business!', pageWidth / 2, currentY, { align: 'center' });
   
-    // Save the PDF
+    
     doc.save('item-receipt.pdf');
   };
   
@@ -338,7 +334,7 @@ const AddItems = () => {
       <option value="packaging1">Box Crate</option>
       <option value="packaging2">Cardboard</option>
       <option value="packaging3">Other</option>
-      {/* Add more options as needed */}
+     
     </select>
     {formData.packaging === 'packaging3' && (
       <>
@@ -361,7 +357,7 @@ const AddItems = () => {
       value={formData.extraDescription}
       onChange={handleInputChange}
       placeholder="Additional details..."
-      className="p-1 border rounded text-sm w-full" // Added w-full for full width
+      className="p-1 border rounded text-sm w-full" 
       rows="3"
     />
   </div>
@@ -436,7 +432,7 @@ const AddItems = () => {
 </form>
 
 
-      {/* Print PDF Button */}
+      
       <div className="flex justify-end mb-4">
         <button
           onClick={handlePrintPDF}

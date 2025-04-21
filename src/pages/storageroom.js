@@ -87,9 +87,9 @@ const Storage = () => {
   const renderFloor = (floorKey, racks) => {
     const floorNumber = floorKey.replace('floor', '');
     return (
-      <div key={floorKey} className="floor p-4 border-t border-gray-300 bg-gray-50 w-[1000px] h-auto">
+      <div key={floorKey} className="floor p-4 border-t border-gray-300 bg-gray-50 w-full max-w-screen-xl mx-auto">
         <h2 className="text-lg font-semibold mb-4">Floor {floorNumber}</h2>
-        <div className="racks grid grid-cols-12 gap-x-4 gap-y-4">
+        <div className="racks grid grid-cols-10 gap-3">
           {Object.keys(racks).map(rack => renderRack(rack, racks[rack]))}
         </div>
       </div>
@@ -99,8 +99,10 @@ const Storage = () => {
   const renderRoom = (roomKey, floors) => {
     const roomNumber = roomKey.replace('room', '');
     return (
-      <div key={roomKey} className="room p-4 border-b border-gray-300 bg-gray-100">
-        <button onClick={handleBackToRooms} className="back-button mb-4 p-2 text-blue-600 hover:text-blue-800">&larr; Back to Rooms</button>
+      <div key={roomKey} className="room p-4 border-b border-gray-300 bg-gray-100 w-full max-w-screen-xl mx-auto">
+        <button onClick={handleBackToRooms} className="back-button mb-4 p-2 text-blue-600 hover:text-blue-800">
+          &larr; Back to Rooms
+        </button>
         <h1 className="text-xl font-bold mb-4">Room {roomNumber}</h1>
         <div>{Object.keys(floors).map(floorKey => renderFloor(floorKey, floors[floorKey]))}</div>
       </div>
@@ -135,11 +137,11 @@ const Storage = () => {
   );
 
   return (
-    <div className="storage-container flex flex-col min-h-screen w-full p-4">
+    <div className="storage-container flex flex-col min-h-screen w-full px-2 sm:px-4">
       <header className="flex-none">
-        <h1 className="text-3xl font-bold mb-1 text-center">Storage Room Overview</h1>
+        <h1 className="text-3xl font-bold mb-4 text-center">Storage Room Overview</h1>
       </header>
-      <main className="flex flex-grow items-center justify-center">
+      <main className="flex flex-grow items-start justify-center w-full">
         {isLoading ? (
           <p className="text-gray-500">Loading storage data...</p>
         ) : (
@@ -147,13 +149,13 @@ const Storage = () => {
             {selectedRoom ? (
               renderRoom(selectedRoom, storage[selectedRoom])
             ) : (
-              <div className="rooms flex flex-wrap gap-4 justify-center">
+              <div className="rooms flex flex-wrap gap-4 justify-center max-w-screen-xl mx-auto">
                 {Object.keys(storage).map(room => (
                   <button
                     key={room}
                     onClick={() => handleRoomClick(room)}
                     className={`room-button p-8 text-2xl font-bold border rounded transition-transform transform hover:scale-105 hover:bg-blue-950 hover:text-white ${selectedRoom === room ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}
-                    style={{ width: '350px', height: '350px' }}
+                    style={{ width: '300px', height: '300px' }}
                   >
                     ROOM {room.slice(-1)}
                   </button>

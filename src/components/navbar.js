@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/Logo.webp'; // Adjust the path as needed
+import logo from '../assets/Logo.webp'; 
 
 const Navbar = () => {
   return (
@@ -9,7 +9,7 @@ const Navbar = () => {
         <img 
           src={logo} 
           alt="Logo" 
-          className="w-12 h-12 rounded-full" // Adjust size as needed
+          className="w-12 h-12 rounded-full" 
         />
         
       </div>

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import PopupModal from '../components/popmodel'; // Adjust the path as needed
-import PopupSendModal from '../components/popssend'; // Adjust the path as needed
+import PopupModal from '../components/popmodel'; 
+import PopupSendModal from '../components/popssend'; 
 
 const AllRecords = () => {
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [tableData, setTableData] = useState([]);
-  const [modalData, setModalData] = useState(null); // To handle modal data
-  const [showModal, setShowModal] = useState(false); // To handle modal visibility
-  const [activeTab, setActiveTab] = useState('records'); // To handle tab switching
+  const [modalData, setModalData] = useState(null); 
+  const [showModal, setShowModal] = useState(false); 
+  const [activeTab, setActiveTab] = useState('records'); 
 
   useEffect(() => {
     const loadItems = () => {

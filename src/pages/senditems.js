@@ -36,8 +36,8 @@ const SendItems = () => {
   const [tableData, setTableData] = useState([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
-  const [modalData, setModalData] = useState(null); // To handle modal data
-  const [showModal, setShowModal] = useState(false); // To handle modal visibility
+  const [modalData, setModalData] = useState(null); 
+  const [showModal, setShowModal] = useState(false); 
 
   const generatePDF = (item) => {
     const doc = new jsPDF();
@@ -46,39 +46,39 @@ const SendItems = () => {
     const customerReceiptText = 'Customer Receipt';
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const logoWidth = 20; // Width of the logo
-    const logoMarginLeft = 14; // Margin from the left edge
-    const lineHeight = 10; // Consistent line height for text
-    const headerMarginTop = 10; // Margin from the top for the header
-    const sectionMarginTop = 20; // Margin above each section
-    const footerMarginBottom = 10; // Margin for the footer
+    const logoWidth = 20; 
+    const logoMarginLeft = 14; 
+    const lineHeight = 10; 
+    const headerMarginTop = 10; 
+    const sectionMarginTop = 20; 
+    const footerMarginBottom = 10; 
     const splitPageHeight = pageHeight / 2;
-    let currentY = headerMarginTop; // Initial Y position for the text
+    let currentY = headerMarginTop; 
 
-    // Add Header
+   
     const addHeader = () => {
         doc.setFontSize(20);
-        doc.addImage(logo, 'WEBP', logoMarginLeft, currentY, logoWidth, logoWidth, '', 'FAST'); // Logo on the left
+        doc.addImage(logo, 'WEBP', logoMarginLeft, currentY, logoWidth, logoWidth, '', 'FAST'); 
 
         const textWidth = doc.getTextWidth(companyName);
-        const totalWidth = logoWidth + 50 + textWidth; // 50 is the margin between logo and text
+        const totalWidth = logoWidth + 50 + textWidth; 
         const textX = (pageWidth - totalWidth) / 2 + logoWidth + 20;
         doc.text(companyName, textX, currentY + 15);
 
         doc.setLineWidth(0.5);
         doc.line(10, currentY + 25, pageWidth - 10, currentY + 25);
 
-        currentY += 30; // Space for the header and line
+        currentY += 30; 
     };
 
-    // Add Section Title
+    
     const addSectionTitle = (title) => {
         doc.setFontSize(16);
         doc.text(title, pageWidth / 2, currentY, { align: 'center' });
-        currentY += 10; // Space after the section title
+        currentY += 10; 
     };
 
-    // Add Data
+    
     const addData = () => {
         doc.setFontSize(12);
         doc.text(`Serial No: ${item.serialNo}`, 10, currentY);
@@ -101,35 +101,33 @@ const SendItems = () => {
         currentY += lineHeight;
     };
 
-    // Add Footer
+    
     const addFooter = () => {
         doc.setFontSize(10);
         doc.text('Thank you for your business!', pageWidth / 2, pageHeight - footerMarginBottom, { align: 'center' });
     };
 
-    // Add Dotted Line
+    
     const addDottedLine = (y) => {
-        doc.setLineWidth(1); // Set line width to 1 for the dotted line
-        doc.setDrawColor(0, 0, 0); // Set line color to black
-        doc.setLineDashPattern([1, 2]); // Set pattern for dotted line (1px dash, 2px space)
-        doc.line(10, y, pageWidth - 10, y); // Draw the dotted line
-        doc.setLineDashPattern([]); // Reset to solid lines for subsequent lines
+        doc.setLineWidth(1); 
+        doc.setDrawColor(0, 0, 0); 
+        doc.setLineDashPattern([1, 2]); 
+        doc.line(10, y, pageWidth - 10, y); 
+        doc.setLineDashPattern([]); 
     };
 
-    // Generate PDF
-    // Office Use Section
     currentY = headerMarginTop;
     addHeader();
     addSectionTitle(officeUseText);
     addData();
     
-    // Add Dotted Line for separation
+    
     addDottedLine(splitPageHeight);
 
-    // Move to the bottom half for the Customer Receipt Section
-    currentY = splitPageHeight + 10; // Adjust as needed to ensure spacing
     
-    // Customer Receipt Section
+    currentY = splitPageHeight + 10; 
+    
+  
     addHeader();
     addSectionTitle(customerReceiptText);
     addData();
@@ -142,25 +140,25 @@ const SendItems = () => {
 
 
   const handleDelete = (serialNo) => {
-    // Retrieve 'items' from local storage
+    
     const items = JSON.parse(localStorage.getItem('items')) || [];
     
-    // Retrieve 'tableData' from local storage
+    
     const tableData = JSON.parse(localStorage.getItem('tableData')) || [];
     
-    // Find the item to be deleted from 'tableData'
+    
     const itemToDelete = tableData.find(item => item.serialNo === serialNo);
   
     if (itemToDelete) {
       console.log('Item to delete:', itemToDelete);
       
-      // Extract the base serial number (before the hyphen)
+      
       const baseSerialNo = serialNo.split('-')[0];
       
-      // Find the original item to update its quantity
+      
       const updatedItems = items.map(item => {
         if (item.serialNo === baseSerialNo) {
-          // Add quantity back to the original item's quantity
+          
           return {
             ...item,
             quantity: (parseFloat(item.quantity) + parseFloat(itemToDelete.newQuantity)).toString(),
@@ -171,18 +169,18 @@ const SendItems = () => {
   
       console.log('Updated items:', updatedItems);
   
-      // Update local storage with the restored item
+   
       localStorage.setItem('items', JSON.stringify(updatedItems));
       
-      // Remove the deleted item from 'tableData'
+     
       const updatedTableData = tableData.filter(item => item.serialNo !== serialNo);
   
       console.log('Updated table data:', updatedTableData);
   
-      // Update local storage with the new table data
+      
       localStorage.setItem('tableData', JSON.stringify(updatedTableData));
       
-      // Update local state
+      
       setTableData(updatedTableData);
     } else {
       console.log('Item not found in tableData');
@@ -197,7 +195,7 @@ const SendItems = () => {
       const item = items.find(item => item.serialNo === serialNo);
       if (item) {
         setFormData(item);
-        console.log('Form Data:', item); // Debugging line
+        console.log('Form Data:', item); 
       } else {
         setFormData({
           serialNo: '',
@@ -218,13 +216,13 @@ const SendItems = () => {
     }
   }, [serialNo]);
   
-  console.log('Packaging Value:', formData.packaging); // Debugging line
+  console.log('Packaging Value:', formData.packaging); 
   
 
   useEffect(() => {
     const storedTableData = JSON.parse(localStorage.getItem('tableData')) || [];
     
-    // Sort table data by serial number
+    
     storedTableData.sort((a, b) => a.serialNo.localeCompare(b.serialNo));
     
     setTableData(storedTableData);
@@ -279,11 +277,11 @@ const SendItems = () => {
       setError('');
     }
     
-    // Generate serial number and date
+    
     const newSerialNo = newFormData.newSerialNo || `SN-${Date.now()}`;
     const currentDate = new Date().toLocaleDateString();
     
-    // Update local storage
+   
     const items = JSON.parse(localStorage.getItem('items')) || [];
     const updatedItems = items.map(item =>
       item.serialNo === serialNo
@@ -292,14 +290,13 @@ const SendItems = () => {
     );
     localStorage.setItem('items', JSON.stringify(updatedItems));
     
-    // Check for duplicate serial numbers
     const storedTableData = JSON.parse(localStorage.getItem('tableData')) || [];
     if (storedTableData.some(item => item.serialNo === newSerialNo)) {
       alert('Serial number already exists.');
       return;
     }
     
-    // Add new form data to table
+    
     const newTableData = [
       ...storedTableData,
       {
@@ -309,16 +306,16 @@ const SendItems = () => {
       }
     ];
     
-    // Sort table data by serial number
+    
     newTableData.sort((a, b) => a.serialNo.localeCompare(b.serialNo));
     
-    // Update state and local storage
+    
     setTableData(newTableData);
     localStorage.setItem('tableData', JSON.stringify(newTableData));
   
-    // Reset form states
-    setShowNewForm(false); // Hide the new form
-    setSerialNo(''); // Clear the serial number input
+    
+    setShowNewForm(false); 
+    setSerialNo(''); 
     setFormData({
       serialNo: '',
       date: '',
